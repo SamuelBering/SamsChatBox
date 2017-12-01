@@ -25,6 +25,7 @@ using DotNetGigs.Extensions;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using System.IO;
 
+
 namespace DotNetGigs
 {
     public class Startup
@@ -47,6 +48,7 @@ namespace DotNetGigs
 
         public void ConfigureServices(IServiceCollection services)
         {
+            services.AddSignalR();
             // Add framework services.
             string debugcon = Configuration.GetConnectionString("DefaultConnection");
 
@@ -143,6 +145,11 @@ namespace DotNetGigs
 
         public void Configure(IApplicationBuilder app, IHostingEnvironment env, ILoggerFactory loggerFactory)
         {
+             app.UseSignalR(routes =>
+            {
+                routes.MapHub<Chat>("chat");
+            });
+            
             loggerFactory.AddConsole();
 
             if (env.IsDevelopment())
@@ -179,6 +186,7 @@ namespace DotNetGigs
                     await next();
                 }
             });
+            
             
             app.UseAuthentication();
 
