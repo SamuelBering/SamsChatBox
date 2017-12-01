@@ -3,12 +3,14 @@ import { CommonModule } from '@angular/common';
 import { RootComponent } from './root/root.component';
 import { HomeComponent } from './home/home.component';
 import { routing } from './chat.routing';
+import { FormsModule } from '@angular/forms';
 
 
 @NgModule({
   imports: [
     CommonModule,
-    routing
+    routing,
+    FormsModule
   ],
   declarations: [RootComponent, HomeComponent]
 })
