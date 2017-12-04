@@ -9,6 +9,7 @@ namespace DotNetGigs.Auth
         Task<string> GenerateEncodedToken(string userName, ClaimsIdentity identity);
         ClaimsIdentity GenerateClaimsIdentity(string userName, string id);
         IEnumerable<Claim> GenerateClaims(string id, bool apiAcess = false);
+        
         void AddUniqueNameClaim(IList<Claim> claims, string userName);
     }
 }

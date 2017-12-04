@@ -34,14 +34,13 @@ export class HomeComponent implements OnInit {
     let httpCon = new HttpConnection(url, { transport: TransportType.WebSockets });
     this._hubConnection = new HubConnection(httpCon);
 
-    // this._hubConnection = new HubConnection('/chat', IHubConnectionOptions);
     this._hubConnection.on('send', (data: any) => {
       const received = `Received: ${data}`;
       this.messages.push(received);
     });
 
     this._hubConnection.on('updateUsers', (data: any) => {
-      this.users.push(data);
+      this.users = data;
     });
 
     this._hubConnection.start()

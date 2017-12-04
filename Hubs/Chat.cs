@@ -11,15 +11,25 @@ namespace DotNetGigs
         private readonly static ConnectionMapping<string> _connections =
             new ConnectionMapping<string>();
 
-        // public void SendChatMessage(string fromWho, string who, string message)
-        // {
-        //     string name = Context.User.Identity.Name;
+        public override Task OnConnectedAsync()
+        {
+            string name = Context.User.Identity.Name;
 
-        //     foreach (var connectionId in _connections.GetConnections(who))
-        //     {
-        //         Clients.Client(connectionId).addChatMessage(name + ": " + message);
-        //     }
-        // }
+            _connections.Add(name, Context.ConnectionId);
+            Clients.All.InvokeAsync("UpdateUsers", _connections.Keys);
+
+            return base.OnConnectedAsync();
+        }
+
+        public override Task OnDisconnectedAsync(Exception exception)
+        {
+            string name = Context.User.Identity.Name;
+
+            _connections.Remove(name, Context.ConnectionId);
+            Clients.All.InvokeAsync("UpdateUsers", _connections.Keys);
+
+            return base.OnDisconnectedAsync(exception);
+        }
 
         public Task AddUser(string userName)
         {

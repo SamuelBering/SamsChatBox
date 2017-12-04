@@ -6,6 +6,7 @@ using System.Threading.Tasks;
 using DotNetGigs.Models;
 using Microsoft.Extensions.Options;
 using System.Collections.Generic;
+using System.Linq;
 
 namespace DotNetGigs.Auth
 {
@@ -21,14 +22,15 @@ namespace DotNetGigs.Auth
 
         public async Task<string> GenerateEncodedToken(string userName, ClaimsIdentity identity)
         {
-            var claims = new[]
-         {
+            var claims = new List<Claim> {
                  new Claim(JwtRegisteredClaimNames.Sub, userName),
                  new Claim(JwtRegisteredClaimNames.Jti, await _jwtOptions.JtiGenerator()),
                  new Claim(JwtRegisteredClaimNames.Iat, ToUnixEpochDate(_jwtOptions.IssuedAt).ToString(), ClaimValueTypes.Integer64),
-                 identity.FindFirst(Helpers.Constants.Strings.JwtClaimIdentifiers.Rol),
-                 identity.FindFirst(Helpers.Constants.Strings.JwtClaimIdentifiers.Id)
              };
+
+            claims.AddRange(identity.Claims.Where((c, i) => i > 0));
+
+            // identity.FindFirst(Helpers.Constants.Strings.JwtClaimIdentifiers.Rol),
 
             // Create the JWT security token and encode it.
             var jwt = new JwtSecurityToken(
@@ -71,7 +73,7 @@ namespace DotNetGigs.Auth
         public void AddUniqueNameClaim(IList<Claim> claims, string userName)
         {
             claims.Add(new Claim(JwtRegisteredClaimNames.UniqueName, userName));
-            
+
         }
         /// <returns>Date converted to seconds since Unix epoch (Jan 1, 1970, midnight UTC).</returns>
         private static long ToUnixEpochDate(DateTime date)
