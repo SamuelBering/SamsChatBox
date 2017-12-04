@@ -71,6 +71,7 @@ namespace DotNetGigs.Auth
         public void AddUniqueNameClaim(IList<Claim> claims, string userName)
         {
             claims.Add(new Claim(JwtRegisteredClaimNames.UniqueName, userName));
+            
         }
         /// <returns>Date converted to seconds since Unix epoch (Jan 1, 1970, midnight UTC).</returns>
         private static long ToUnixEpochDate(DateTime date)

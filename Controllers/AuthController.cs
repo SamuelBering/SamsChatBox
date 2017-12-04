@@ -18,13 +18,15 @@ namespace DotNetGigs.Controllers
     public class AuthController : Controller
     {
         private readonly UserManager<AppUser> _userManager;
+        private readonly SignInManager<AppUser> _signInManager;
         private readonly IJwtFactory _jwtFactory;
         private readonly JsonSerializerSettings _serializerSettings;
         private readonly JwtIssuerOptions _jwtOptions;
 
-        public AuthController(UserManager<AppUser> userManager, IJwtFactory jwtFactory, IOptions<JwtIssuerOptions> jwtOptions)
+        public AuthController(UserManager<AppUser> userManager, SignInManager<AppUser> signInManager, IJwtFactory jwtFactory, IOptions<JwtIssuerOptions> jwtOptions)
         {
             _userManager = userManager;
+            _signInManager = signInManager;
             _jwtFactory = jwtFactory;
             _jwtOptions = jwtOptions.Value;
 
@@ -76,6 +78,8 @@ namespace DotNetGigs.Controllers
                     // check the credentials  
                     if (await _userManager.CheckPasswordAsync(userToVerify, password))
                     {
+                        var result = await _signInManager.CheckPasswordSignInAsync(userToVerify, password, false);
+
                         var claims = await _userManager.GetClaimsAsync(userToVerify);
 
                         _jwtFactory.AddUniqueNameClaim(claims, userName);
