@@ -77,6 +77,8 @@ namespace DotNetGigs.Controllers
                     if (await _userManager.CheckPasswordAsync(userToVerify, password))
                     {
                         var claims = await _userManager.GetClaimsAsync(userToVerify);
+
+                        _jwtFactory.AddUniqueNameClaim(claims, userName);
                         // var debugClaimsIdentidy = new ClaimsIdentity(new GenericIdentity(userName, "Token"), claims);
                         // var debugClaimsIdentidy = new ClaimsIdentity(claims);
 
