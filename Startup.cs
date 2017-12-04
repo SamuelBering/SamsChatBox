@@ -118,13 +118,6 @@ namespace DotNetGigs
                 ClockSkew = TimeSpan.Zero
             };
 
-            // services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
-            //     .AddJwtBearer(jwtBearerOptions =>
-            //     {
-
-            //         jwtBearerOptions.TokenValidationParameters = tokenValidationParameters;
-            //     });
-
             services.AddAuthentication(o =>
             {
                 o.DefaultAuthenticateScheme = JwtBearerDefaults.AuthenticationScheme;
@@ -134,6 +127,21 @@ namespace DotNetGigs
            {
 
                jwtBearerOptions.TokenValidationParameters = tokenValidationParameters;
+               jwtBearerOptions.Events = new JwtBearerEvents
+               {
+                   OnMessageReceived = context =>
+                   {
+                       var signalRTokenHeaders = context.Request.Query["signalRTokenHeader"];
+                       string signalRTokenHeader = signalRTokenHeaders.Count > 0 ? signalRTokenHeaders[0] : "";
+
+                       if (!string.IsNullOrEmpty(signalRTokenHeader) && context.Request.Path.Value.StartsWith("/chat"))
+                       {
+                           context.Token = signalRTokenHeader;
+                           context.Request.Headers.Add("Authorization",$"Bearer {signalRTokenHeader}");
+                       }
+                       return Task.CompletedTask;
+                   }
+               };
            });
 
 
@@ -145,11 +153,7 @@ namespace DotNetGigs
 
         public void Configure(IApplicationBuilder app, IHostingEnvironment env, ILoggerFactory loggerFactory)
         {
-             app.UseSignalR(routes =>
-            {
-                routes.MapHub<Chat>("chat");
-            });
-            
+
             loggerFactory.AddConsole();
 
             if (env.IsDevelopment())
@@ -186,9 +190,13 @@ namespace DotNetGigs
                     await next();
                 }
             });
-            
-            
+
+
             app.UseAuthentication();
+            app.UseSignalR(routes =>
+                      {
+                          routes.MapHub<Chat>("chat");
+                      });
 
             app.UseDefaultFiles();
             app.UseStaticFiles();

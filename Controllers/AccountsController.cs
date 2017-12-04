@@ -46,7 +46,8 @@ namespace DotNetGigs.Controllers
 
             // result = await _userManager.AddClaimsAsync(userIdentity, _jwtFactory.GenerateClaimsIdentity(userIdentity.UserName, userIdentity.Id).Claims);
 
-            result = await _userManager.AddClaimsAsync(userIdentity, _jwtFactory.GenerateClaims(userIdentity.Id, true));
+            result = await _userManager.AddClaimsAsync(userIdentity, _jwtFactory.GenerateClaims(userIdentity.Id));
+            
             if (!result.Succeeded) return new BadRequestObjectResult(Errors.AddErrorsToModelState(result, ModelState));
 
             await _appDbContext.Jobseekers.AddAsync(new Jobseeker { IdentityId = userIdentity.Id, Location = model.Location });

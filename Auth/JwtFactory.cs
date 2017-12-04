@@ -57,16 +57,15 @@ namespace DotNetGigs.Auth
 
         public IEnumerable<Claim> GenerateClaims(string id, bool apiAcess = false)
         {
-            if (apiAcess)
-                return new[] {
-                new Claim(Helpers.Constants.Strings.JwtClaimIdentifiers.Id, id),
-                new Claim(Helpers.Constants.Strings.JwtClaimIdentifiers.Rol, Helpers.Constants.Strings.JwtClaims.ApiAccess)
-                };
-            else
-                return new[] {
+            List<Claim> claims = new List<Claim>{
                 new Claim(Helpers.Constants.Strings.JwtClaimIdentifiers.Id, id),
                 new Claim(Helpers.Constants.Strings.JwtClaimIdentifiers.Rol, Helpers.Constants.Strings.JwtClaims.UserAccess)
                 };
+
+            if (apiAcess)
+              claims.Add(new Claim(Helpers.Constants.Strings.JwtClaimIdentifiers.Rol, Helpers.Constants.Strings.JwtClaims.ApiAccess));
+
+           return claims;  
         }
 
         /// <returns>Date converted to seconds since Unix epoch (Jan 1, 1970, midnight UTC).</returns>

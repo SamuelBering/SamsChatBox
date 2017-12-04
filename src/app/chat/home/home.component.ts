@@ -1,5 +1,5 @@
 import { Component, OnInit } from '@angular/core';
-import { HubConnection } from '@aspnet/signalr-client';
+import { HubConnection, HttpConnection, TransportType } from '@aspnet/signalr-client';
 
 @Component({
   selector: 'app-home',
@@ -12,6 +12,7 @@ export class HomeComponent implements OnInit {
   public async: any;
   message = '';
   messages: string[] = [];
+  users: string[] = [];
 
   constructor() { }
 
@@ -22,17 +23,32 @@ export class HomeComponent implements OnInit {
     this.messages.push(data);
   }
 
-  ngOnInit() {
-    this._hubConnection = new HubConnection('/chat');
+  public addUser(userName: string): void {
+    const data = `${userName}`;
+    this._hubConnection.invoke('AddUser', data);
+  }
 
+  ngOnInit() {
+    let access_token = localStorage.getItem('auth_token');
+    let url = '/chat' + '?signalRTokenHeader=' + access_token;
+    let httpCon = new HttpConnection(url, { transport: TransportType.WebSockets });
+    this._hubConnection = new HubConnection(httpCon);
+
+    // this._hubConnection = new HubConnection('/chat', IHubConnectionOptions);
     this._hubConnection.on('send', (data: any) => {
       const received = `Received: ${data}`;
       this.messages.push(received);
     });
 
+    this._hubConnection.on('updateUsers', (data: any) => {
+      this.users.push(data);
+    });
+
     this._hubConnection.start()
       .then(() => {
         console.log('Hub connection started');
+        // let userName = localStorage.getItem('userName');
+        // this.addUser(userName);
       })
       .catch(err => {
         console.log('Error while establishing connection');

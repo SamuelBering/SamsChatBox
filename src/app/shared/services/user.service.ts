@@ -69,6 +69,7 @@ export class UserService extends BaseService {
         this.apiAccessNavStatusSource.next(this.apiAccess);
         localStorage.setItem('auth_token', res.auth_token);
         localStorage.setItem('api_access', this.apiAccess.toString());
+        localStorage.setItem('userName', userName);
         this.loggedIn = true;
         this._authNavStatusSource.next(true);
         return true;
@@ -79,6 +80,7 @@ export class UserService extends BaseService {
   logout() {
     localStorage.removeItem('auth_token');
     localStorage.removeItem('api_access');
+    localStorage.removeItem('userName');
     this.loggedIn = false;
     this.apiAccess = false;
     this._authNavStatusSource.next(false);

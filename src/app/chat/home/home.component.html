@@ -38,4 +38,9 @@
   <div class="row" *ngIf="messages.length <= 0">
     <span>No messages</span>
   </div>
+  <div *ngIf="users.length > 0">
+    <p *ngFor="let user of users;">
+      {{user}}
+    </p>>
+  </div>
 </div>
