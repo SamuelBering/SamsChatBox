@@ -11,9 +11,10 @@ using System;
 namespace DotNetGigs.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    partial class ApplicationDbContextModelSnapshot : ModelSnapshot
+    [Migration("20171204174754_AddedDateTimePropToMessageModel")]
+    partial class AddedDateTimePropToMessageModel
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -116,9 +117,7 @@ namespace DotNetGigs.Migrations
 
                     b.Property<DateTime>("DateTime");
 
-                    b.Property<string>("IdentityId");
-
-                    b.Property<int>("RoomId");
+                    b.Property<int?>("RoomId");
 
                     b.Property<string>("SenderId");
 
@@ -269,8 +268,7 @@ namespace DotNetGigs.Migrations
                 {
                     b.HasOne("DotNetGigs.Models.Entities.Room", "Room")
                         .WithMany()
-                        .HasForeignKey("RoomId")
-                        .OnDelete(DeleteBehavior.Cascade);
+                        .HasForeignKey("RoomId");
 
                     b.HasOne("DotNetGigs.Models.Entities.AppUser", "Sender")
                         .WithMany()

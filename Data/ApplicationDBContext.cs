@@ -11,8 +11,16 @@ namespace DotNetGigs.Data
         {
         }
 
+
+        //user managagement
         public DbSet<Jobseeker> Jobseekers { get; set; }
 
         public DbSet<Employer> Employer { get; set; }
+
+        //Chat 
+        public DbSet<Message> Messages { get; set; }
+
+        public DbSet<Room> Rooms { get; set; }
+
     }
 }

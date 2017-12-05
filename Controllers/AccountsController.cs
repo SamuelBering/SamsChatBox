@@ -38,13 +38,8 @@ namespace DotNetGigs.Controllers
             var userIdentity = _mapper.Map<AppUser>(model);
 
             var result = await _userManager.CreateAsync(userIdentity, model.Password);
-            // await _userManager.AddToRoleAsync(userIdentity, Helpers.Constants.Strings.JwtClaimIdentifiers.Rol);
-
-            // var identity = await GetClaimsIdentity(credentials.UserName, credentials.Password);
 
             if (!result.Succeeded) return new BadRequestObjectResult(Errors.AddErrorsToModelState(result, ModelState));
-
-            // result = await _userManager.AddClaimsAsync(userIdentity, _jwtFactory.GenerateClaimsIdentity(userIdentity.UserName, userIdentity.Id).Claims);
 
             result = await _userManager.AddClaimsAsync(userIdentity, _jwtFactory.GenerateClaims(userIdentity.Id));
             

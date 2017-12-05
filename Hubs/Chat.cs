@@ -43,7 +43,7 @@ namespace DotNetGigs
             return Clients.All.InvokeAsync("UpdateUsers", _connections.Keys);
         }
 
-        public Task Send(string message)
+        public Task Send(string message, int roomId)
         {
             return Clients.All.InvokeAsync("Send", message);
         }

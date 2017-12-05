@@ -1,4 +1,5 @@
 import { Component, OnInit } from '@angular/core';
+import { NgForm } from '@angular/forms/src/directives/ng_form';
 
 @Component({
   selector: 'app-root',
@@ -10,6 +11,11 @@ export class RootComponent implements OnInit {
   constructor() { }
 
   ngOnInit() {
+  }
+
+  onSubmitNewRoom(f: NgForm) {
+    let roomName = f.value['roomName'];
+
   }
 
 }

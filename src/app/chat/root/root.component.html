@@ -1,15 +1,55 @@
 <div class="row">
 
-  <div class="col-md-2" role="navigation" style="border-right:1px solid #cecece">
-    <ul class="nav nav-pills nav-stacked">
-      <li class="nav-item">
-        <a class="nav-link sidebar-menu-button" routerLinkActive="active-sidebar-link" routerLink='/chat/home'>
-          <i class="fa fa-home" aria-hidden="true"></i> Home</a>
-      </li>
-    </ul>
-  </div>
+  <nav class="navbar navbar-default">
+    <div class="navbar-header">
+      <button type="button" class="navbar-toggle" data-toggle="collapse" data-target="#myNavbar">
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+      </button>
+      <a class="navbar-brand" target="iframe_content">Chat Box</a>
+    </div>
+    <div class="collapse navbar-collapse" id="myNavbar">
+      <button (click)="roomModal.open()" class="btn btn-default btn-sm navbar-btn">
+        <span class="glyphicon glyphicon-plus"></span>
+      </button>
+      <ul class="nav navbar-nav">
+        <li>
+          <a routerLink='/chat/home'>Home</a>
+        </li>
 
-  <div class="col-md-10">
-    <router-outlet></router-outlet>
-  </div>
+        <li class="dropdown">
+          <a class="dropdown-toggle" data-toggle="dropdown" href="#">Enter room
+            <span class="caret"></span>
+          </a>
+          <ul class="dropdown-menu">
+            <li>
+              <a routerLink='/chat/room'>Kitchen</a>
+            </li>
+          </ul>
+        </li>
+      </ul>
+    </div>
+  </nav>
 </div>
+
+<div class="row">
+  <router-outlet></router-outlet>
+</div>
+
+<!-- Create-Room-modal template -->
+<modal #roomModal>
+  <modal-header>
+    <h3>Create new room</h3>
+  </modal-header>
+  <modal-content>
+    Hello Modal!
+    <form #newRoomForm="ngForm" (ngSubmit)="onSubmitNewRoom(newRoomForm);roomModal.close()" novalidate>
+      <input name="roomName" ngModel placeholder="room name" required>
+      <button>Submit</button>
+    </form>
+  </modal-content>
+  <modal-footer>
+    <button class="btn btn-primary" (click)="roomModal.close()">close</button>
+  </modal-footer>
+</modal>
