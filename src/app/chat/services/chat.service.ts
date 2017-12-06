@@ -11,6 +11,7 @@ import { Observable } from 'rxjs/Rx';
 // import * as _ from 'lodash';
 // Add the RxJS Observable operators we need in this app.
 import '../../rxjs-operators';
+import { Room } from '../models/room.interface';
 
 @Injectable()
 
@@ -34,6 +35,16 @@ export class ChatService extends BaseService {
     public sendMessage(message: string, roomId: number, hubConnection: HubConnection): void {
 
         hubConnection.invoke('Send', message, roomId);
+    }
+
+    createRoom(title: string): Observable<Room> {
+        let body = JSON.stringify({ title });
+        let headers = new Headers({ 'Content-Type': 'application/json' });
+        let options = new RequestOptions({ headers: headers });
+
+        return this.http.post(this.baseUrl + '/chat/createroom', body, options)
+            .map(res => res.json())
+            .catch(this.handleError);
     }
 
 
