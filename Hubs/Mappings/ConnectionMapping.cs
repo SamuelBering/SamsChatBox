@@ -6,8 +6,8 @@ namespace DotNetGigs
 {
     public class ConnectionMapping<T>
     {
-        private readonly Dictionary<T, HashSet<string>> _connections =
-            new Dictionary<T, HashSet<string>>();
+        private readonly Dictionary<T, HashSet<Connection>> _connections =
+            new Dictionary<T, HashSet<Connection>>();
 
         public int Count
         {
@@ -25,40 +25,40 @@ namespace DotNetGigs
             }
         }
 
-        public void Add(T key, string connectionId)
+        public void Add(T key, Connection connection)
         {
             lock (_connections)
             {
-                HashSet<string> connections;
+                HashSet<Connection> connections;
                 if (!_connections.TryGetValue(key, out connections))
                 {
-                    connections = new HashSet<string>();
+                    connections = new HashSet<Connection>();
                     _connections.Add(key, connections);
                 }
 
                 lock (connections)
                 {
-                    connections.Add(connectionId);
+                    connections.Add(connection);
                 }
             }
         }
 
-        public IEnumerable<string> GetConnections(T key)
+        public IEnumerable<Connection> GetConnections(T key)
         {
-            HashSet<string> connections;
+            HashSet<Connection> connections;
             if (_connections.TryGetValue(key, out connections))
             {
                 return connections;
             }
 
-            return Enumerable.Empty<string>();
+            return Enumerable.Empty<Connection>();
         }
 
-        public void Remove(T key, string connectionId)
+        public void Remove(T key, Connection connection)
         {
             lock (_connections)
             {
-                HashSet<string> connections;
+                HashSet<Connection> connections;
                 if (!_connections.TryGetValue(key, out connections))
                 {
                     return;
@@ -66,7 +66,7 @@ namespace DotNetGigs
 
                 lock (connections)
                 {
-                    connections.Remove(connectionId);
+                    connections.Remove(connection);
 
                     if (connections.Count == 0)
                     {

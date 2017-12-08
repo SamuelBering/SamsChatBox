@@ -23,9 +23,13 @@
             <span class="caret"></span>
           </a>
           <ul class="dropdown-menu">
-            <li>
-              <a routerLink='/chat/room'>Kitchen</a>
+            <li *ngFor="let room of _roomsList">
+              <a routerLink='/chat/room'>{{room.title}}</a>
             </li>
+            <!-- <li>
+             
+              <a (click)="debug()">Kitchen</a>
+            </li> -->
           </ul>
         </li>
       </ul>

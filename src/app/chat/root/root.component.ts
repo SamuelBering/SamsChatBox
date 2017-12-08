@@ -1,6 +1,9 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, ChangeDetectorRef } from '@angular/core';
 import { NgForm } from '@angular/forms/src/directives/ng_form';
 import { ChatService } from '../services/chat.service';
+import { HubConnection } from '@aspnet/signalr-client';
+import { Room } from '../models/room.interface';
+import { retry } from 'rxjs/operator/retry';
 
 @Component({
   selector: 'app-root',
@@ -12,10 +15,25 @@ export class RootComponent implements OnInit {
   errors: string;
   isRequesting: boolean;
   submitted: boolean = false;
+  private _hubConnection: HubConnection;
+  private _roomsList: Room[];
 
-  constructor(private chatService: ChatService) { }
+  constructor(private chatService: ChatService, private changeDetectorRef: ChangeDetectorRef) {
+
+    // updateRoomsList
+  }
 
   ngOnInit() {
+    this._hubConnection = this.chatService.GetHubConnection();
+
+    this._hubConnection.on('updateRoomsList', (data: any) => {
+      const objArray = JSON.parse(data);
+      let roomslistdebug: Room[] = objArray as Array<Room>;
+      this._roomsList = roomslistdebug;
+      let debug: string = '';
+      this.changeDetectorRef.detectChanges();
+    });
+
   }
 
   onSubmitNewRoom(f: NgForm) {
@@ -42,5 +60,9 @@ export class RootComponent implements OnInit {
       errors => this.errors = errors);
 
   }
+
+  // debug() {
+  //   let debug = this._roomsList;
+  // }
 
 }

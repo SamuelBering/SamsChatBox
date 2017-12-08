@@ -1,11 +1,12 @@
 using FluentValidation.Attributes;
 using DotNetGigs.ViewModels.Validations;
 
-namespace DotNetGigs.ViewModels 
+namespace DotNetGigs.ViewModels
 {
     [Validator(typeof(RoomViewModelValidator))]
-    public class RoomViewModel 
+    public class RoomViewModel
     {
-        public string Title { get; set; }         
+        public int Id { get; set; }
+        public string Title { get; set; }
     }
 }

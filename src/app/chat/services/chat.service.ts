@@ -18,18 +18,24 @@ import { Room } from '../models/room.interface';
 export class ChatService extends BaseService {
 
     baseUrl: string = '';
+    private _hubConnection: HubConnection;
 
     constructor(private http: Http, private configService: ConfigService) {
         super();
         this.baseUrl = configService.getApiURI();
     }
 
-    GetHubConnection(roomId: number): HubConnection {
+    get HubConnection(): HubConnection {
+        return this._hubConnection;
+    }
+
+    GetHubConnection(): HubConnection {
         let access_token = localStorage.getItem('auth_token');
-        let url = '/chat' + '?signalRTokenHeader=' + access_token + '&roomId=' + roomId;
+        let url = '/chat' + '?signalRTokenHeader=' + access_token;
         let httpCon = new HttpConnection(url, { transport: TransportType.WebSockets });
         let hubConnection = new HubConnection(httpCon);
-        return hubConnection;
+        this._hubConnection = hubConnection;
+        return this._hubConnection;
     }
 
     public sendMessage(message: string, roomId: number, hubConnection: HubConnection): void {
@@ -45,6 +51,10 @@ export class ChatService extends BaseService {
         return this.http.post(this.baseUrl + '/chat/createroom', body, options)
             .map(res => res.json())
             .catch(this.handleError);
+    }
+
+    enterRoom(room: Room) {
+       this._hubConnection.invoke('EnterRoom', room);
     }
 
 
