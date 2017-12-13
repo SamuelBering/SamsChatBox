@@ -34,6 +34,8 @@ export class RootComponent implements OnInit {
       this.changeDetectorRef.detectChanges();
     });
 
+    this.chatService.startHubConnection();
+
   }
 
   onSubmitNewRoom(f: NgForm) {

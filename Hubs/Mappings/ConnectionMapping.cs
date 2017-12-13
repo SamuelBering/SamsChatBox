@@ -54,6 +54,24 @@ namespace DotNetGigs
             return Enumerable.Empty<Connection>();
         }
 
+        public T FindKey(Connection connection)
+        {
+            //kolla om current connection finns i något rum redan
+            //Om sant ta bort current connection från det rummet
+
+            var key = _connections.SingleOrDefault(currentKey =>
+            {
+                var con = currentKey.Value.SingleOrDefault(c =>
+                {
+                    return c.ConnectionId == connection.ConnectionId;
+                });
+
+                return con != null;
+            });
+
+            return key.Key;
+        }
+
         public void Remove(T key, Connection connection)
         {
             lock (_connections)

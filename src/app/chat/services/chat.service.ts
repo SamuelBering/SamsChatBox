@@ -12,6 +12,7 @@ import { Observable } from 'rxjs/Rx';
 // Add the RxJS Observable operators we need in this app.
 import '../../rxjs-operators';
 import { Room } from '../models/room.interface';
+import { BehaviorSubject } from 'rxjs/BehaviorSubject';
 
 @Injectable()
 
@@ -19,6 +20,8 @@ export class ChatService extends BaseService {
 
     baseUrl: string = '';
     private _hubConnection: HubConnection;
+    connectionStatusSource = new BehaviorSubject<boolean>(false);
+
 
     constructor(private http: Http, private configService: ConfigService) {
         super();
@@ -38,9 +41,21 @@ export class ChatService extends BaseService {
         return this._hubConnection;
     }
 
-    public sendMessage(message: string, roomId: number, hubConnection: HubConnection): void {
+    startHubConnection() {
+        this._hubConnection.start()
+            .then(() => {
+                console.log('Hub connection started');
+                this.connectionStatusSource.next(true);
+            })
+            .catch(err => {
+                this.connectionStatusSource.next(false);
+                console.log('Error while establishing connection');
+            });
+    }
 
-        hubConnection.invoke('Send', message, roomId);
+    public sendMessage(message: string, room: Room): void {
+
+        this._hubConnection.invoke('SendToRoom', message, room);
     }
 
     createRoom(title: string): Observable<Room> {
@@ -54,7 +69,7 @@ export class ChatService extends BaseService {
     }
 
     enterRoom(room: Room) {
-       this._hubConnection.invoke('EnterRoom', room);
+        this._hubConnection.invoke('EnterRoom', room);
     }
 
 

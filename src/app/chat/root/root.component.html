@@ -24,12 +24,8 @@
           </a>
           <ul class="dropdown-menu">
             <li *ngFor="let room of _roomsList">
-              <a routerLink='/chat/room'>{{room.title}}</a>
+              <a routerLink='/chat/room' [queryParams]="{roomId:room.id, roomTitle:room.title}">{{room.title}}</a>
             </li>
-            <!-- <li>
-             
-              <a (click)="debug()">Kitchen</a>
-            </li> -->
           </ul>
         </li>
       </ul>

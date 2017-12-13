@@ -1,36 +1,38 @@
+// import { Component, OnInit, OnDestroy } from '@angular/core';
 import { Component, OnInit } from '@angular/core';
-import { ChatService } from '../services/chat.service';
+
+// import { ChatService } from '../services/chat.service';
 import { Room } from '../models/room.interface';
-import { HubConnection } from '@aspnet/signalr-client';
+// import { Subscription } from 'rxjs/Subscription';
 
 @Component({
   selector: 'app-home',
   templateUrl: './home.component.html',
   styleUrls: ['./home.component.scss']
 })
+// export class HomeComponent implements OnInit, OnDestroy {
 export class HomeComponent implements OnInit {
 
-  private _hubConnection: HubConnection;
 
+  // connectionStatusSubscription: Subscription;
 
-  constructor(private chatService: ChatService) { }
+  // constructor(private chatService: ChatService) { }
+  constructor() { }
 
   ngOnInit() {
-
-    this._hubConnection = this.chatService.HubConnection;
-
-    let room: Room = { id: 0, title: '(No room)' };
-
-    this._hubConnection.start()
-      .then(() => {
-        console.log('Hub connection started');
-        this.chatService.enterRoom(room);
-      })
-      .catch(err => {
-        console.log('Error while establishing connection');
-      });
-
+    // this.connectionStatusSubscription = this.chatService.connectionStatusSource
+    //   .subscribe(statusIsConnected => {
+    //     if (statusIsConnected) {
+    //       let room: Room = { id: 0, title: '(No room)' };
+    //       this.chatService.enterRoom(room);
+    //     }
+    //   });
   }
+
+  // ngOnDestroy() {
+  //   prevent memory leak when component is destroyed
+  //   this.connectionStatusSubscription.unsubscribe();
+  // }
 
 
 }
