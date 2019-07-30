@@ -1,4 +1,4 @@
-import { Component, OnInit, OnDestroy } from '@angular/core';
+import { ChangeDetectorRef, Component, OnInit, OnDestroy } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
 import { HubConnection, HttpConnection, TransportType } from '@aspnet/signalr-client';
 import { ChatService } from '../services/chat.service';
@@ -23,7 +23,7 @@ export class RoomComponent implements OnInit, OnDestroy {
   currentRoom: Room;
 
 
-  constructor(private chatService: ChatService, private route: ActivatedRoute) { }
+  constructor(private ref: ChangeDetectorRef, private chatService: ChatService, private route: ActivatedRoute) { }
 
   public sendMessage(): void {
     this.chatService.sendMessage(this.message, this.currentRoom);
@@ -36,15 +36,21 @@ export class RoomComponent implements OnInit, OnDestroy {
       this.connectionStatusSubscription = this.chatService.connectionStatusSource
         .subscribe(statusIsConnected => {
           if (statusIsConnected) {
-            if (this.currentRoom !== undefined)
+            if (this.currentRoom !== undefined) {
+              this.messages = [];
+              this.ref.detectChanges();
               this.chatService.enterRoom(this.currentRoom);
+            }
           }
         });
 
     });
 
     this._hubConnection = this.chatService.HubConnection;
-    this._hubConnection.on('send', (message: string, sender: string) => {
+    this._hubConnection.on('send', (message: string, sender: string, datestr: any) => {
+      // const dateTime = JSON.parse(dateTimeJson);
+      const dateTime = new Date(datestr);
+
       const received: string = `${sender}: ${message}`;
       this.messages.push(received);
     });
