@@ -21,12 +21,7 @@ export class PlaceService extends BaseService {
         this.baseUrl = configService.getApiURI();
     }
 
-    GetPlaces2(): Observable<string> {
-
-        // return this.http.get(`${this.baseUrl}?location=-33.8670522,151.1957362&radius=500&types=food&name=harbour&key=${this.apiKey}`)
-        //     .map(res => {
-        //         return res.json().results[0].name;
-        //     });
+    GetPlaces(): Observable<Array<Place>> {
         let headers = new Headers({ 'Content-Type': 'application/json' });
         let search = new URLSearchParams();
         search.set('Lat', '123');
@@ -34,25 +29,26 @@ export class PlaceService extends BaseService {
         search.set('Radius', '123');
         return this.http.get(`${this.baseUrl}/place/getplaces`, { search: search, headers: headers })
             .map(res => {
-                return res.json().results[0].name;
-            });
+                return res.json(); 
+            })
+            .catch(this.handleError);
     }
 
-    GetPlaces(): Observable<string> {
+    // GetPlaces(): Observable<string> {
 
-        const places = new Observable<string>((observer) => {
-            observer.next('Staty');
-            observer.next('Banan');
-            observer.next('Kalle');
-            observer.complete();
-            // When the consumer unsubscribes, clean up data ready for next subscription.
-            return { unsubscribe() { } };
-        });
+    //     const places = new Observable<string>((observer) => {
+    //         observer.next('Staty');
+    //         observer.next('Banan');
+    //         observer.next('Kalle');
+    //         observer.complete();
+    //         // When the consumer unsubscribes, clean up data ready for next subscription.
+    //         return { unsubscribe() { } };
+    //     });
 
-        return places;
+    //     return places;
 
 
-    }
+    // }
 
 
 

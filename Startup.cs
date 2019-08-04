@@ -34,9 +34,11 @@ namespace DotNetGigs
         // For more information on how to configure your application, visit https://go.microsoft.com/fwlink/?LinkID=398940
         private const string SecretKey = "iNivDmHLpUA223sqsfhqGbMRdRj1PVkH"; // todo: get this from somewhere secure
         private readonly SymmetricSecurityKey _signingKey = new SymmetricSecurityKey(Encoding.ASCII.GetBytes(SecretKey));
+        private readonly IHostingEnvironment _hostingEnvironment;
 
         public Startup(IHostingEnvironment env)
         {
+            _hostingEnvironment = env;
             var builder = new ConfigurationBuilder()
                 .SetBasePath(env.ContentRootPath)
                 .AddJsonFile("appsettings.json", optional: true, reloadOnChange: true)
@@ -69,7 +71,12 @@ namespace DotNetGigs
             services.AddTransient<IHttpClientService, HttpClientService>();
             string nearbySearchBaseUrl = Configuration.GetValue<string>("PlacesApi:NearbySearchBaseUrl");
             string apiKey = Configuration.GetValue<string>("PlacesApi:ApiKey");
-            services.AddTransient<IPlaceService, PlaceService>(serviceProvivider => new PlaceService(nearbySearchBaseUrl, apiKey));
+
+            //Use real PlaceService
+            // services.AddTransient<IPlaceService, PlaceService>(serviceProvivider => new PlaceService(nearbySearchBaseUrl, apiKey));
+
+            //Use mock 
+            services.AddSingleton<IPlaceService, MockPlaceService>(serviceProvivider => new MockPlaceService(File.ReadAllText($"{_hostingEnvironment.ContentRootPath}/mockPlaces.json")));
 
             // jwt wire up
             // Get options from app settings

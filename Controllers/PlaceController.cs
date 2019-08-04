@@ -32,19 +32,15 @@ namespace DotNetGigs.Controllers
         [HttpGet("getplaces")]
         public async Task<IActionResult> Get(PlaceFilter model)
         {
-            var places = await _placeService.GetPlaces(model);
-
-            var placesVM = _mapper.Map<List<PlaceViewModel>>(places);
-
             if (!ModelState.IsValid)
             {
                 return BadRequest(ModelState);
             }
 
-            return Ok(new
-            {
-                Result = "Test"
-            });
+            var places = await _placeService.GetPlaces(model);
+            var placesVM = _mapper.Map<List<PlaceViewModel>>(places);
+
+            return Ok(placesVM);
         }
 
     }

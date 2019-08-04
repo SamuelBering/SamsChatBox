@@ -2,6 +2,8 @@ import { Component, OnInit, Input } from '@angular/core';
 import { Place } from '../models/place.interface';
 import { Filter } from '../models/filter.interface';
 import { PlaceService } from '../services/place.service';
+import { DataCollectorService } from '../services/data.collector.service';
+import { Router } from '@angular/router';
 
 @Component({
   selector: 'places',
@@ -12,18 +14,19 @@ export class PlacesComponent implements OnInit {
 
   @Input() filter: Filter;
 
-  places: Array<Place> = [{ name: "Kyrka" }, { name: 'Hus' }];
+  places: Array<Place> = [];
 
-  constructor(private placeService: PlaceService) { }
+  constructor(private placeService: PlaceService, private dataCollectorService: DataCollectorService, private router: Router) { }
 
   ngOnInit() {
-    // this.placeService.GetPlaces().subscribe((place) => {
-    //   this.places[0].name = place;
-    // });
-
-    this.placeService.GetPlaces2().subscribe((place) => {
-      this.places[0].name = place;
-    });
+    this.placeService.GetPlaces().subscribe((places) => {
+      this.places = places;
+    },
+      errors => {
+        let errorKey: string = 'placeServiceError';
+        this.dataCollectorService.storage[errorKey] = errors;
+        this.router.navigate(['/guide/error', errorKey]);
+      });
 
   }
 
