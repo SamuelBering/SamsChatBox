@@ -24,7 +24,7 @@ using Microsoft.AspNetCore.Diagnostics;
 using DotNetGigs.Extensions;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using System.IO;
-
+using DotNetGigs.Services;
 
 namespace DotNetGigs
 {
@@ -65,8 +65,11 @@ namespace DotNetGigs
             options.UseSqlServer("Server=(localdb)\\mssqllocaldb;Database=AngularASPNETCoreAuth;Trusted_Connection=True;MultipleActiveResultSets=true",
             b => b.MigrationsAssembly("DotNetGigs")));
 
-
             services.AddSingleton<IJwtFactory, JwtFactory>();
+            services.AddTransient<IHttpClientService, HttpClientService>();
+            string nearbySearchBaseUrl = Configuration.GetValue<string>("PlacesApi:NearbySearchBaseUrl");
+            string apiKey = Configuration.GetValue<string>("PlacesApi:ApiKey");
+            services.AddTransient<IPlaceService, PlaceService>(serviceProvivider => new PlaceService(nearbySearchBaseUrl, apiKey));
 
             // jwt wire up
             // Get options from app settings
@@ -137,7 +140,7 @@ namespace DotNetGigs
                        if (!string.IsNullOrEmpty(signalRTokenHeader) && context.Request.Path.Value.StartsWith("/chat"))
                        {
                            context.Token = signalRTokenHeader;
-                           context.Request.Headers.Add("Authorization",$"Bearer {signalRTokenHeader}");
+                           context.Request.Headers.Add("Authorization", $"Bearer {signalRTokenHeader}");
                        }
                        return Task.CompletedTask;
                    }

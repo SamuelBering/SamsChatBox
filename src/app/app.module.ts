@@ -15,8 +15,12 @@ import { HomeComponent } from './home/home.component';
 import { AccountModule } from './account/account.module';
 /* Dashboard Imports */
 import { DashboardModule } from './dashboard/dashboard.module';
+/* Chat Imports */
 import { ChatModule } from './chat/chat.module';
+/* Settings Imports */
 import {SettingsModule} from './settings/settings.module';
+/* Guide Imports */
+import { GuideModule } from './guide/guide.module';
 
 import { ConfigService } from './shared/utils/config.service';
 import { UserService } from './shared/services/user.service';
@@ -34,8 +38,9 @@ import { UserService } from './shared/services/user.service';
     DashboardModule,
     BrowserModule,
     ChatModule,
+    GuideModule,
     SettingsModule,
-    FormsModule,
+    FormsModule, 
     HttpModule,
     routing
   ],

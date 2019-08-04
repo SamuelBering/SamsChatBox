@@ -1,0 +1,11 @@
+<div class="row">
+  <div class="col-sm-12">
+    <form class="form-inline" (ngSubmit)="sendMessage()" #messageForm="ngForm">
+      <div class="form-group">
+        <label class="sr-only" for="message">Message</label>
+        <input type="text" class="form-control" id="message" placeholder="your message..." name="message" [(ngModel)]="message" required>
+      </div>
+      <button type="submit" class="btn btn-primary" [disabled]="!messageForm.valid">Send SignalR Message</button>
+    </form>
+  </div>
+</div>
