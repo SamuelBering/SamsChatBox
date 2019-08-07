@@ -4,4 +4,5 @@
     <h3>Welcome to The Guide</h3>
   </div>
 </div>
-<places></places>
+<filter (filter)="onFilterChange($event)"></filter>
+<places [filter]='filter'></places>

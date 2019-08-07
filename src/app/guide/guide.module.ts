@@ -7,6 +7,8 @@ import { PlaceService } from './services/place.service';
 import { routing } from './guide.routing';
 import { DataCollectorService } from './services/data.collector.service';
 import { ErrorComponent } from './error/error.component';
+import { FilterComponent } from './filter/filter.component';
+import { ReactiveFormsModule } from '@angular/forms';
 // import { FormsModule } from '@angular/forms';
 // import { ModalModule } from 'ng2-modal';
 
@@ -14,10 +16,11 @@ import { ErrorComponent } from './error/error.component';
   imports: [
     CommonModule,
     routing,
+    ReactiveFormsModule
     // FormsModule,
     // ModalModule
   ],
-  declarations: [RootComponent, HomeComponent, PlacesComponent, ErrorComponent],
+  declarations: [RootComponent, HomeComponent, PlacesComponent, ErrorComponent, FilterComponent],
   providers: [PlaceService, DataCollectorService]
 })
 export class GuideModule { }

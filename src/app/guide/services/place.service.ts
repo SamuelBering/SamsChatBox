@@ -8,6 +8,7 @@ import { BaseService } from '../../shared/services/base.service';
 import '../../rxjs-operators';
 import { Place } from '../models/place.interface';
 import { ConfigService } from '../../shared/utils/config.service';
+import { Filter } from '../models/filter.interface';
 
 @Injectable()
 export class PlaceService extends BaseService {
@@ -21,35 +22,25 @@ export class PlaceService extends BaseService {
         this.baseUrl = configService.getApiURI();
     }
 
-    GetPlaces(): Observable<Array<Place>> {
-        let headers = new Headers({ 'Content-Type': 'application/json' });
-        let search = new URLSearchParams();
-        search.set('Lat', '123');
-        search.set('Long', '123');
-        search.set('Radius', '123');
-        return this.http.get(`${this.baseUrl}/place/getplaces`, { search: search, headers: headers })
-            .map(res => {
-                return res.json(); 
-            })
-            .catch(this.handleError);
+    private CreateQueryParameters(filter: Filter): URLSearchParams {
+        let queryParams = new URLSearchParams();
+
+        for (let propertyName in filter) {
+            queryParams.set(propertyName, filter[propertyName]);
+        }
+
+        return queryParams;
     }
 
-    // GetPlaces(): Observable<string> {
+    GetPlaces(filter: Filter): Observable<Array<Place>> {
+        let headers = new Headers({ 'Content-Type': 'application/json' });
+        let queryParams = this.CreateQueryParameters(filter);
 
-    //     const places = new Observable<string>((observer) => {
-    //         observer.next('Staty');
-    //         observer.next('Banan');
-    //         observer.next('Kalle');
-    //         observer.complete();
-    //         // When the consumer unsubscribes, clean up data ready for next subscription.
-    //         return { unsubscribe() { } };
-    //     });
-
-    //     return places;
-
-
-    // }
-
-
+        return this.http.get(`${this.baseUrl}/place/getplaces`, { search: queryParams, headers: headers })
+            .map(res => {
+                return res.json();
+            })
+            .catch(this.handleError);
+    }  
 
 }

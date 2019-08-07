@@ -25,8 +25,8 @@ namespace DotNetGigs.Services
         }
 
         public async Task<IList<Place>> GetPlaces(PlaceFilter filter)
-        {
-             return this.Places;
+        { 
+             return filter.Keyword !=null ? this.Places.Where(p=>p.name.ToLower().Contains(filter.Keyword.ToLower())).ToList(): this.Places;
         }
 
     }
