@@ -32,6 +32,33 @@ export class PlaceService extends BaseService {
         return queryParams;
     }
 
+    // GetPlaces2(filter: Filter): Observable<Array<Place>> {
+    //     let pyrmont = new google.maps.LatLng(-33.8665433,151.1956316);
+
+    //     let map = new google.maps.Map(document.getElementById('map'), {
+    //         center: pyrmont,
+    //         zoom: 15
+    //       });
+      
+    //     var request = {
+    //       location: pyrmont,
+    //       radius: '500',
+    //       query: 'restaurant'
+    //     };
+      
+    //     var service = new google.maps.places.PlacesService(map);
+    //     service.nearbySearch(request, callback);
+    // }
+
+    // callback(results, status) {
+    //     if (status == google.maps.places.PlacesServiceStatus.OK) {
+    //       for (var i = 0; i < results.length; i++) {
+    //         var place = results[i];
+    //         console.log(results[i]);
+    //       }
+    //     }
+    //   }
+
     GetPlaces(filter: Filter): Observable<Array<Place>> {
         let headers = new Headers({ 'Content-Type': 'application/json' });
         let queryParams = this.CreateQueryParameters(filter);

@@ -14,8 +14,8 @@ export class FilterComponent implements OnInit {
   keywordInput: FormControl = new FormControl('');
 
   private currentFilter: Filter = {
-    lat: 0,
-    long: 0,
+    lat: -33.8665433,
+    long: 151.1956316,
     radius: 0,
     keyword: '',
     language: '',
