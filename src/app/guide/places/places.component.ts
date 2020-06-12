@@ -11,7 +11,7 @@ import { Router } from '@angular/router';
   styleUrls: ['./places.component.scss']
 })
 export class PlacesComponent implements OnInit, OnChanges {
- 
+
   @Input() filter: Filter;
 
   places: Array<Place> = [];
@@ -26,7 +26,7 @@ export class PlacesComponent implements OnInit, OnChanges {
     this.getPlaces();
   }
 
-  private getPlaces(){
+  private getPlaces() {
     this.placeService.GetPlaces(this.filter).subscribe((places) => {
       this.places = places;
     },
@@ -35,6 +35,14 @@ export class PlacesComponent implements OnInit, OnChanges {
         this.dataCollectorService.storage[errorKey] = errors;
         this.router.navigate(['/guide/error', errorKey]);
       });
+    // this.placeService.GetPlaces(this.filter).subscribe((places) => {
+    //   this.places = places;
+    // },
+    //   errors => {
+    //     let errorKey: string = 'placeServiceError';
+    //     this.dataCollectorService.storage[errorKey] = errors;
+    //     this.router.navigate(['/guide/error', errorKey]);
+    //   });
   }
-  
+
 }
